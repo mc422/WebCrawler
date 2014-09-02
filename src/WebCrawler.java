@@ -20,13 +20,16 @@ import org.jsoup.select.Elements;
 
 public class WebCrawler {
 	
+	private static int maxCrawl;
 	private static String startURL;
 	private static String domainURL;
 	public static HashSet<String> urls;
 	public static HashSet<String> visited;
 	public static HashSet<String> disallows;
+	public static HashSet<String> topic;
 	
-	public WebCrawler(String url){
+	public WebCrawler(String url, int max){
+		maxCrawl = max;
 		startURL = url;
 		domainURL = getDomain(url);
 		urls = new HashSet<String>();
@@ -36,7 +39,8 @@ public class WebCrawler {
 		disallows = StandardRobot();
 	}
 	
-	public WebCrawler(String url, String domain){
+	public WebCrawler(String url, String domain, int max){
+		maxCrawl = max;
 		startURL = url;
 		domainURL = domain;
 		urls = new HashSet<String>();
@@ -46,28 +50,43 @@ public class WebCrawler {
 		disallows = StandardRobot();
 	}
 	
-	public void start(){		
+	public WebCrawler(String url, String domain, int max, HashSet<String> topic){
+		maxCrawl = max;
+		startURL = url;
+		domainURL = domain;
+		urls = new HashSet<String>();
+		visited = new HashSet<String>();
+		urls.add(startURL);
+		visited.add(startURL);
+		disallows = StandardRobot();
+		this.topic = topic;
+	}
+	
+	public void start() throws IOException{		
 		BufferedWriter output = null;
-		try {
-	          File file = new File("example.txt");
-	          output = new BufferedWriter(new FileWriter(file));
-	          output.write("something");
-	        } catch ( IOException e ) {
-	           e.printStackTrace();
-        }
+		int count = 1;
+        File file = new File("mode1_URL.txt");
+        output = new BufferedWriter(new FileWriter(file));
+        output.write("URL record of all web crawler");
+        output.newLine();
+        output.write(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        output.newLine();
+        
 		while(urls.size() > 0){
 			String current = urls.iterator().next();
-			try {
-				output.write(current);
-				output.newLine();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			output.write(current);
+			output.newLine();
 			urls.remove(current);
 			try {
 				System.out.println("Current loading, Total urls: " + urls.size() + "......");
 				Document doc = Jsoup.connect(current).get();
+				
+				file = new File("download/" + Integer.toString(count) + ".html");
+				BufferedWriter download = new BufferedWriter(new FileWriter(file));
+				download.write(doc.toString());
+				download.close();
+				count++;
+				
 				Elements anchors = doc.select("a");
 				for(Element anchor : anchors){
 					String href = anchor.attr("href");
@@ -81,13 +100,62 @@ public class WebCrawler {
 				// TODO Auto-generated catch block
 				System.out.println(e.getMessage() + " at:  " + current);
 			}
+			if(count>maxCrawl)
+				break;
 		}
+		output.close();
+	}
+	
+	public void topicCrawlerStart() throws IOException{		
+		int count = 1;
+        File file = new File("mode2_URL.txt");
+        BufferedWriter output = new BufferedWriter(new FileWriter(file));
+        output.write("URL record of all web crawler");
+        output.newLine();
+        output.write(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        output.newLine();
+        
+        String current = urls.iterator().next();
+		output.write(current);
+		output.newLine();
+		urls.remove(current);
+		
 		try {
-			output.close();
+			System.out.println("Current loading, Total urls: " + urls.size() + "......");
+			Document doc = Jsoup.connect(current).get();
+			//System.out.println(doc);
+			
+/*			file = new File("download/" + Integer.toString(count) + ".html");
+			BufferedWriter download = new BufferedWriter(new FileWriter(file));
+			download.write(doc.toString());
+			download.close();
+			count++;*/
+			
+			Elements anchors = doc.select("a");
+			for(Element anchor : anchors){
+				String href = anchor.attr("href");
+				String innerHtml = anchor.html();
+				if(innerHtml.startsWith("<script")){
+					//do nothing
+				} else if(innerHtml.startsWith("<img")) {
+					System.out.println(innerHtml);
+				} else {
+					System.out.println(innerHtml);
+				}
+				
+				href = fixURL(href);
+/*				if(checkURL(href)){
+					urls.add(href);
+					visited.add(href);
+				}*/
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println(e.getMessage() + " at:  " + current);
 		}
+		/*if(count>maxCrawl)
+			break;*/
+        
 	}
 	
 	public static String getDomain(String url){
@@ -219,13 +287,15 @@ public class WebCrawler {
 
 	/**
 	 * @param args
+	 * @throws IOException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
-		WebCrawler cralwer = new WebCrawler("http://www.cs.utah.edu");
-		System.out.println(cralwer.getDomainURL());
+		WebCrawler crawler = new WebCrawler("http://www.cs.utah.edu", 200);
+		System.out.println(crawler.getDomainURL());
 		System.out.println("_______________________");
-		cralwer.start();
+		//cralwer.start();
+		crawler.topicCrawlerStart();
 		
 /*		for(Iterator<String> it = cralwer.visited.iterator(); it.hasNext();){
 			String temp = it.next();
