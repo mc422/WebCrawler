@@ -12,7 +12,7 @@ public class test {
 	 */
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
-		URL url = new URL("http://www.cs.utah.edu");
+		URL url = new URL("http://www.google.com");
 		
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestProperty(
@@ -31,11 +31,8 @@ public class test {
         
         //String all = sb.toString();
         System.out.println(sb);
-        
-        String temp = "https://www.google.com/";
-        if(temp.startsWith("http")){
-        	System.out.println("good ");
-        }
+        String str = "http://www.cs.utah.edu/gradsac/research-credits/2014-fall.pdf";
+        System.out.println(str.substring(str.length()-3,str.length()));
 	}
 
 }

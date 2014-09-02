@@ -17,7 +17,7 @@ public class JSoup_test {
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		
-		Document doc = Jsoup.connect("http://www.utah.edu/people/faculty/").get();
+		Document doc = Jsoup.connect("http://www.sparkbrowser.com/").get();
 		Elements anchors = doc.select("a");
 		for(Element anchor : anchors){
 			System.out.println(anchor.attr("href"));
