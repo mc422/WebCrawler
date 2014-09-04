@@ -18,7 +18,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class WebCrawler {
+public class topicWebCrawler {
 	
 	private static int maxCrawl;
 	private static String startURL;
@@ -28,7 +28,7 @@ public class WebCrawler {
 	public static HashSet<String> disallows;
 	public static HashSet<String> topic;
 	
-	public WebCrawler(String url, int max){
+	public topicWebCrawler(String url, int max, HashSet<String> topic){
 		maxCrawl = max;
 		startURL = url;
 		domainURL = getDomain(url);
@@ -37,9 +37,10 @@ public class WebCrawler {
 		urls.add(startURL);
 		visited.add(startURL);
 		disallows = StandardRobot();
+		this.topic = topic;
 	}
 	
-	public WebCrawler(String url, String domain, int max){
+	public topicWebCrawler(String url, String domain, int max, HashSet<String> topic){
 		maxCrawl = max;
 		startURL = url;
 		domainURL = domain;
@@ -48,25 +49,26 @@ public class WebCrawler {
 		urls.add(startURL);
 		visited.add(startURL);
 		disallows = StandardRobot();
+		this.topic = topic;
 	}
 	
 	public void start() throws IOException, InterruptedException{		
-		BufferedWriter output = null;
 		int count = 1;
-        File file = new File("mode1_URL.txt");
-        output = new BufferedWriter(new FileWriter(file));
+        File file = new File("mode2_URL.txt");
+        BufferedWriter output = new BufferedWriter(new FileWriter(file));
         output.write("URL record of all web crawler");
         output.newLine();
         output.write(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         output.newLine();
         
-		while(urls.size() > 0){
-			String current = urls.iterator().next();
+        while(urls.size() > 0){
+	        String current = urls.iterator().next();
 			output.write(current);
 			output.newLine();
 			urls.remove(current);
+			
 			try {
-				//System.out.println("Current downloading file # " + count + " ......");
+				System.out.println("Current loading, Total urls: " + urls.size() + "......");
 				Document doc = Jsoup.connect(current).get();
 				
 				String keyURL = current.substring(7).replace('/', '_').replace(':', '_').
@@ -82,10 +84,14 @@ public class WebCrawler {
 				for(Element anchor : anchors){
 					String href = anchor.attr("href");
 					href = fixURL(href);
-					if(checkURL(href)){
-						urls.add(href);
-						visited.add(href);
-					}
+					String innerHtml = anchor.text();
+					if(checkTopicWord(innerHtml)){
+						//System.out.println(href+ " with text:  " + innerHtml);
+						if(checkTopicURL(href)){
+							urls.add(href);
+							visited.add(href);
+						}
+					}					
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -94,7 +100,8 @@ public class WebCrawler {
 			Thread.sleep(500);
 			if(count>maxCrawl)
 				break;
-		}
+        }
+		
 		output.close();
 	}
 	
@@ -178,13 +185,10 @@ public class WebCrawler {
 	 * @param url too check
 	 * @return true means this url should be crawl in the future, false otherwise
 	 */
-	public static boolean checkURL(String url){
+	public static boolean checkTopicURL(String url){
 		int length = url.length();
 		String suffix = url.substring(length-3, length);
 		
-		// check if the url has the same web Domian
-		if(!url.startsWith(domainURL))
-			return false;
 		// check if the url has been visited before
 		if(visited.contains(url))
 			return false;
@@ -213,6 +217,15 @@ public class WebCrawler {
 		return domainURL;
 	}
 	
+	public static boolean checkTopicWord(String url){
+		for(Iterator<String> it = topic.iterator(); it.hasNext();){
+			String key = it.next();
+			if(url.contains(key))
+				return true;
+		}
+		return false;
+	}
+
 	/**
 	 * @param args
 	 * @throws IOException 
@@ -220,10 +233,17 @@ public class WebCrawler {
 	 */
 	public static void main(String[] args) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
-		WebCrawler crawler = new WebCrawler("http://en.wikipedia.org", 50);
-		System.out.println(crawler.getDomainURL());
-		System.out.println("_______________________");
-		crawler.start();
+
+		
+		HashSet<String> topics = new HashSet<String>();
+		topics.add("Day");
+		topics.add("slavery");
+/*		topics.add("computing");
+		topics.add("computer");*/
+		
+		topicWebCrawler TopicCrawler = new topicWebCrawler("http://en.wikipedia.org", 
+				"http://en.wikipedia.org", 20, topics);
+		TopicCrawler.start();
 		
 /*		for(Iterator<String> it = cralwer.visited.iterator(); it.hasNext();){
 			String temp = it.next();

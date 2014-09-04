@@ -26,6 +26,7 @@ public class REtest {
         String string1=m.group(5);
         System.out.print("("+c1.toString()+")"+"("+c2.toString()+")"+"("+c3.toString()+")"+"("+c4.toString()+")"+"("+string1.toString()+")"+"\n");
     }
+	}
 
 
 }

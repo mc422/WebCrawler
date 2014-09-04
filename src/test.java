@@ -31,8 +31,9 @@ public class test {
         
         //String all = sb.toString();
         System.out.println(sb);
-        String str = "http://www.cs.utah.edu/gradsac/research-credits/2014-fall.pdf";
-        System.out.println(str.substring(str.length()-3,str.length()));
+        String str = "http://www.cs.utah.edu/gradsac/research-credits/";
+        System.out.println(str);
+        //System.out.println(str.substring(str.length()-3,str.length()));
 	}
 
 }

@@ -1,0 +1,24 @@
+URL record of all web crawler
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+http://en.wikipedia.org
+http://en.wikipedia.org/wiki/Slavery_in_the_United_States
+http://en.wikipedia.org/wiki/Historiography_of_the_United_States#Slavery
+http://en.wikipedia.org/#Post-Emancipation_Proclamation_slavery
+http://en.wikipedia.org/wiki/List_of_films_featuring_slavery
+http://en.wikipedia.org/wiki/Category:Films_about_slavery
+http://en.wikipedia.org/#Inter-tribal_slavery
+http://en.wikipedia.org/wiki/List_of_notable_opponents_of_slavery
+http://en.wikipedia.org/wiki/John_Quincy_Adams_and_abolitionism
+http://en.wikipedia.org/wiki/Abraham_Lincoln_and_slavery
+http://books.google.com/books?id=EIAcAAAAMAAJ&pg=PA79
+http://en.wikipedia.org/wiki/Slavery_among_the_indigenous_peoples_of_the_Americas
+http://savannahnow.com/node/448938
+http://en.wikipedia.org/wiki/List_of_opponents_of_slavery
+http://en.wikipedia.org/wiki/Thanksgiving_(United_States)#Lincoln_and_the_Civil_War
+http://en.wikipedia.org/wiki/Honor_America_Days
+http://en.wikipedia.org/wiki/Alabama_Day
+http://en.wikipedia.org/wiki/National_Defense_Transportation_Day
+http://en.wikipedia.org/wiki/Native_American_Heritage_Day
+http://en.wikipedia.org/wiki/Veterans_Day_(United_States)
+http://en.wikipedia.org/wiki/National_Grandparents_Day
+http://en.wikipedia.org/wiki/Hawaii_Admission_Day
